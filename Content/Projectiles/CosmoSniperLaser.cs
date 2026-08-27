@@ -8,6 +8,8 @@ using Terraria.ModLoader;
 
 namespace HexTest.Content.Projectiles
 {
+	using NPC = Terraria.NPC;
+
 	public class CosmoSniperLaser : ModProjectile
 	{
 		private int trailLength = 40;

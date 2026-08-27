@@ -8,6 +8,8 @@ using Terraria.UI;
 
 namespace HexTest.Content.Systems
 {
+	using NPC = Terraria.NPC;
+
 	public class TestMenuSystem : ModSystem
 	{
 		public static ModKeybind openMenuKey;

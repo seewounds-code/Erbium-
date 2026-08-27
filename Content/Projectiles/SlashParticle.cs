@@ -6,6 +6,8 @@ using Terraria.ModLoader;
 
 namespace HexTest.Content.Projectiles
 {
+	using NPC = Terraria.NPC;
+
 	public class SlashParticle : ModProjectile
 	{
 		private Color rainbowColor;

@@ -30,6 +30,16 @@ Items: {
 		Tooltip: ""
 		DisplayName: Cosmo Book
 	}
+
+	CosmoBeacon: {
+		DisplayName: Cosmo Beacon
+		Tooltip: ""
+	}
+
+	CosmoBoot: {
+		DisplayName: Cosmo Boot
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -41,3 +51,5 @@ Projectiles: {
 
 Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block
 Keybinds.OpenTestMenu.DisplayName: Open Test Menu
+NPCs.CosmoUfo.DisplayName: Cosmo Ufo
+BossChecklistIntegration.CosmoUfo.SpawnInfo: "Use a [i:HexTest/CosmoBeacon] anywhere and anytime."
