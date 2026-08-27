@@ -1,0 +1,43 @@
+# This file will automatically update with entries for new content after a build and reload.
+# Please read https://github.com/tModLoader/tModLoader/wiki/Localization to learn more about localization and these files.
+
+Items: {
+	testsword: {
+		DisplayName: God Slayer Blade
+		Tooltip: This blade has power channeled by ancient gods, it holds tremendous power. Wearing a specific godly armor may unlock hidden powers of the God Slayer Blade
+	}
+
+	CosmoSniper: {
+		DisplayName: Cosmo Sniper
+		Tooltip:
+			'''
+			Fires a high-frequency 5-round cosmic burst laser.
+			Requires a 3-second cooldown to vent energy.
+			'''
+	}
+
+	CosmerianOre: {
+		DisplayName: Cosmerian Ore
+		Tooltip: ""
+	}
+
+	CosmerianBar: {
+		DisplayName: Cosmerian Bar
+		Tooltip: ""
+	}
+
+	CosmoBook: {
+		Tooltip: ""
+		DisplayName: Cosmo Book
+	}
+}
+
+Projectiles: {
+	SlashParticle.DisplayName: Slash Particle
+	CosmoSniperLaser.DisplayName: Cosmo Sniper Laser
+	CosmoSunScythe.DisplayName: Cosmo Sun Scythe
+	CosmoSun.DisplayName: Cosmo Sun
+}
+
+Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block
+Keybinds.OpenTestMenu.DisplayName: Open Test Menu

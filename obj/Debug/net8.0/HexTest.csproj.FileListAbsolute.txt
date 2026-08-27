@@ -1,0 +1,12 @@
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\bin\Debug\net8.0\HexTest.deps.json
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\bin\Debug\net8.0\HexTest.dll
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\bin\Debug\net8.0\HexTest.pdb
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.csproj.AssemblyReference.cache
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.AssemblyInfoInputs.cache
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.AssemblyInfo.cs
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.csproj.CoreCompileInputs.cache
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.dll
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\refint\HexTest.dll
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.pdb
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\ref\HexTest.dll

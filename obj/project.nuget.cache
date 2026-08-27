@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "eAFQpxe+Wi0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\akyuz\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\HexTest\\HexTest.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\akyuz\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.28\\microsoft.netcore.app.ref.8.0.28.nupkg.sha512",
+    "C:\\Users\\akyuz\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.28\\microsoft.windowsdesktop.app.ref.8.0.28.nupkg.sha512",
+    "C:\\Users\\akyuz\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.28\\microsoft.aspnetcore.app.ref.8.0.28.nupkg.sha512"
+  ],
+  "logs": []
+}
