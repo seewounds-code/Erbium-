@@ -43,7 +43,7 @@ namespace HexTest.Content.Items
 			Item.value = Item.buyPrice(gold: 999);
 			Item.rare = ItemRarityID.Red;
 			Item.UseSound = SoundID.Item5;
-			Item.autoReuse = false;
+			Item.autoReuse = true;
 			Item.shoot = ModContent.ProjectileType<CosmoSniperLaser>();
 			Item.shootSpeed = 30f;
 			Item.noMelee = true;
@@ -139,8 +139,7 @@ namespace HexTest.Content.Items
 				.AddIngredient(ItemID.LunarBar, 10)
 				.AddIngredient(ItemID.Glass, 5)
 				.AddIngredient(ItemID.Wire, 5)
-				.AddTile(TileID.MythrilAnvil)
-				.AddTile(TileID.LunarCraftingStation)
+				.AddTile(TileID.AdamantiteForge)
 				.Register();
 		}
 	}
