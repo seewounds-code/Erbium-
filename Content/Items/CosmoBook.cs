@@ -93,16 +93,4 @@ namespace HexTest.Content.Items
 				.Register();
 		}
 	}
-
-	public class CosmoBookPlayer : ModPlayer
-	{
-		public override void UpdateEquips()
-		{
-			if (Player.HeldItem.type == ModContent.ItemType<CosmoBook>())
-			{
-				Player.manaRegenBonus += 20;
-				Player.manaRegenDelay = 0;
-			}
-		}
-	}
 }
