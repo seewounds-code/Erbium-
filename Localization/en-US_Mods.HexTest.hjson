@@ -126,6 +126,30 @@ Items: {
 			Auto-places platforms beneath your feet from your inventory while moving
 			'''
 	}
+
+	Spitfire: {
+		Spitfire: {
+			DisplayName: Spitfire
+			Tooltip:
+				'''
+				Rapidly fires infernite rounds
+				'Forged in the belly of a volcano'
+				'''
+		}
+
+		InferniteBullet: {
+			DisplayName: Infernite Bullet
+			Tooltip: Ignites enemies on impact
+		}
+
+		DisplayName: Spitfire
+		Tooltip: ""
+	}
+
+	InferniteBullet: {
+		DisplayName: Infernite Bullet
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -136,6 +160,7 @@ Projectiles: {
 	CosmoMonster.DisplayName: Cosmo Monster
 	BloodOrb.DisplayName: Blood Orb
 	BloodDrop.DisplayName: Blood Drop
+	InferniteBulletProjectile.DisplayName: Infernite Bullet
 }
 
 Tiles: {
