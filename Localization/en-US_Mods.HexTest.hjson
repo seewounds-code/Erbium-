@@ -90,6 +90,33 @@ Items: {
 		DisplayName: Inferniskin Potion
 		Tooltip: ""
 	}
+
+	BloodSpores: {
+		DisplayName: Blood Spores
+		Tooltip: Summons the Blood Sucker. Only drains its power at night.
+		DayMessage: The Blood Sucker cannot emerge in the sunlight...
+		AlreadyActive: A Blood Sucker is already here!
+	}
+
+	RedHusk: {
+		DisplayName: Red Husk
+		Tooltip: A shriveled husk soaked in dried blood.
+	}
+
+	BloodSuckerTrophy: {
+		DisplayName: Blood Sucker Trophy
+		Tooltip: ""
+	}
+
+	BloodSuckerMask: {
+		DisplayName: Blood Sucker Mask
+		Tooltip: ""
+	}
+
+	BloodSuckerTreasureBag: {
+		DisplayName: Treasure Bag (Blood Sucker)
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -98,6 +125,8 @@ Projectiles: {
 	CosmoSunScythe.DisplayName: Cosmo Sun Scythe
 	CosmoSun.DisplayName: Cosmo Sun
 	CosmoMonster.DisplayName: Cosmo Monster
+	BloodOrb.DisplayName: Blood Orb
+	BloodDrop.DisplayName: Blood Drop
 }
 
 Tiles: {
@@ -133,8 +162,22 @@ Configs: {
 	}
 }
 
-NPCs.CosmoUfo.DisplayName: Cosmo Ufo
-BossChecklistIntegration.CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywhere and anytime.
+NPCs: {
+	CosmoUfo.DisplayName: Cosmo Ufo
+
+	BloodSuckerHead: {
+		DisplayName: Blood Sucker
+		PhaseShift: The Blood Sucker enters a frenzy!
+	}
+
+	BloodSuckerBody.DisplayName: Blood Sucker
+	BloodSuckerTail.DisplayName: Blood Sucker
+}
+
+BossChecklistIntegration: {
+	CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywhere and anytime.
+	BloodSucker.SpawnInfo: Use a [i:HexTest/BloodSpores] at night.
+}
 
 Buffs: {
 	InferniskinBuff: {
