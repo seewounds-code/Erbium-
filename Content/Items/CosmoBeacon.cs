@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using HexTest.Content.NPC;
+using HexTest.Content.CosmoNpcs;
 using HexTest.Content.Ore;
 
 namespace HexTest.Content.Items

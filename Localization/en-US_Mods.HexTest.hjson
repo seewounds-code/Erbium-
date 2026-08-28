@@ -41,6 +41,16 @@ Items: {
 		Tooltip: ""
 	}
 
+	CosmoSkewer: {
+		DisplayName: Cosmo Skewer
+		Tooltip: ""
+	}
+
+	CosmoPickaxe: {
+		DisplayName: Cosmo Pickaxe
+		Tooltip: ""
+	}
+
 	CosmerianBrick: {
 		DisplayName: Cosmerian Brick
 		Tooltip: ""
@@ -57,6 +67,7 @@ Projectiles: {
 	CosmoSniperLaser.DisplayName: Cosmo Sniper Laser
 	CosmoSunScythe.DisplayName: Cosmo Sun Scythe
 	CosmoSun.DisplayName: Cosmo Sun
+	CosmoMonster.DisplayName: Cosmo Monster
 }
 
 Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block

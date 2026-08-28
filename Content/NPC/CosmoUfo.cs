@@ -7,13 +7,15 @@ using Terraria.GameContent.ItemDropRules;
 using HexTest.Content.Ore;
 using HexTest.Content.Systems;
 
-namespace HexTest.Content.NPC
+namespace HexTest.Content.CosmoNpcs
 {
 	using NPC = Terraria.NPC;
 
 	[AutoloadBossHead]
 	public class CosmoUfo : ModNPC
 	{
+		public override string Texture => "HexTest/Content/NPC/CosmoUfo";
+
 		private Vector2 dashDir;
 		private bool phase2Signaled;
 
