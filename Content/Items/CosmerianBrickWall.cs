@@ -1,16 +1,16 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using HexTest.Content.Tiles;
+using HexTest.Content.Walls;
 
-namespace HexTest.Content.Ore
+namespace HexTest.Content.Items
 {
-	public class CosmerianBar : ModItem
+	public class CosmerianBrickWall : ModItem
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 30;
-			Item.height = 24;
+			Item.width = 16;
+			Item.height = 16;
 			Item.maxStack = Item.CommonMaxStack;
 			Item.useTurn = true;
 			Item.autoReuse = true;
@@ -18,17 +18,16 @@ namespace HexTest.Content.Ore
 			Item.useTime = 15;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.consumable = true;
-			Item.createTile = ModContent.TileType<CosmerianBarTile>();
+			Item.createWall = ModContent.WallType<CosmerianBrickWallTile>();
 			Item.rare = ItemRarityID.LightPurple;
-			Item.value = Item.buyPrice(gold: 1);
+			Item.value = Item.buyPrice(silver: 10);
 		}
 
 		public override void AddRecipes()
 		{
-			CreateRecipe()
-				.AddIngredient(ModContent.ItemType<CosmerianOre>(), 2)
-				.AddIngredient(ItemID.LunarOre, 2)
-				.AddTile(TileID.AdamantiteForge)
+			CreateRecipe(4)
+				.AddIngredient(ModContent.ItemType<CosmerianBrick>(), 1)
+				.AddTile(TileID.WorkBenches)
 				.Register();
 		}
 	}

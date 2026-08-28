@@ -40,6 +40,16 @@ Items: {
 		DisplayName: Cosmo Boot
 		Tooltip: ""
 	}
+
+	CosmerianBrick: {
+		DisplayName: Cosmerian Brick
+		Tooltip: ""
+	}
+
+	CosmerianBrickWall: {
+		DisplayName: Cosmerian Brick Wall
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -52,4 +62,4 @@ Projectiles: {
 Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block
 Keybinds.OpenTestMenu.DisplayName: Open Test Menu
 NPCs.CosmoUfo.DisplayName: Cosmo Ufo
-BossChecklistIntegration.CosmoUfo.SpawnInfo: "Use a [i:HexTest/CosmoBeacon] anywhere and anytime."
+BossChecklistIntegration.CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywhere and anytime.

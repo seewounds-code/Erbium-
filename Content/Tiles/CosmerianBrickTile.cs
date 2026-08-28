@@ -1,22 +1,20 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
+using HexTest.Content.Items;
 
-namespace HexTest.Content.Ore
+namespace HexTest.Content.Tiles
 {
-	public class CosmerianOreBlock : ModTile
+	public class CosmerianBrickTile : ModTile
 	{
+		public override string Texture => "HexTest/Content/Tiles/CosmerianBrick";
+
 		public override void SetStaticDefaults()
 		{
 			Main.tileSolid[Type] = true;
 			Main.tileBlockLight[Type] = true;
-			Main.tileLighted[Type] = true;
-			Main.tileMergeDirt[Type] = false;
-			TileID.Sets.ForcedDirtMerging[Type] = false;
-			MinPick = 180;
 
-			RegisterItemDrop(ModContent.ItemType<CosmerianOre>());
+			RegisterItemDrop(ModContent.ItemType<CosmerianBrick>());
 
 			AddMapEntry(new Color(150, 50, 255));
 		}
