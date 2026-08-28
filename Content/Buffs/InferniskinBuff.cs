@@ -15,7 +15,6 @@ namespace HexTest.Content.Buffs
 		{
 			Main.buffNoSave[Type] = false;
 			Main.buffNoTimeDisplay[Type] = false;
-			Main.buffTooltip[Type] = "Increases damage by 20% and critical strike chance by 5%, but reduces defense by 8";
 		}
 
 		public override void Update(Player player, ref int buffIndex)

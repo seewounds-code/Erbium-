@@ -138,7 +138,7 @@ BossChecklistIntegration.CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywh
 
 Buffs: {
 	InferniskinBuff: {
-		DisplayName: Inferniskin Buff
-		Description: Mods.HexTest.Buffs.InferniskinBuff.Description
+		DisplayName: Inferniskin
+		Description: Increases damage by 20% and critical strike chance by 5%, but reduces defense by 8
 	}
 }
