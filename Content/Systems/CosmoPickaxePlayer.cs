@@ -40,28 +40,29 @@ namespace HexTest.Content.Systems
 			if (!centerTile.HasTile)
 				return;
 
-			int[] sideOffsets = { -1, 1 };
-
-			foreach (int dx in sideOffsets)
+			for (int dx = -1; dx <= 1; dx++)
 			{
-				int tx = targetX + dx;
-				int ty = targetY;
+				for (int dy = -1; dy <= 1; dy++)
+				{
+					int tx = targetX + dx;
+					int ty = targetY + dy;
 
-				if (!WorldGen.InWorld(tx, ty))
-					continue;
+					if (!WorldGen.InWorld(tx, ty))
+						continue;
 
-				Tile tile = Main.tile[tx, ty];
-				if (!tile.HasTile)
-					continue;
+					Tile tile = Main.tile[tx, ty];
+					if (!tile.HasTile)
+						continue;
 
-				if (TileID.Sets.BasicChest[tile.TileType] || TileID.Sets.Torch[tile.TileType])
-					continue;
+					if (TileID.Sets.BasicChest[tile.TileType] || TileID.Sets.Torch[tile.TileType])
+						continue;
 
-				isMiningExtra = true;
-				Player.PickTile(tx, ty, Player.HeldItem.pick);
-				isMiningExtra = false;
+					isMiningExtra = true;
+					Player.PickTile(tx, ty, Player.HeldItem.pick);
+					isMiningExtra = false;
 
-				SpawnMiningParticles(tx, ty);
+					SpawnMiningParticles(tx, ty);
+				}
 			}
 
 			SpawnMiningParticles(targetX, targetY);
