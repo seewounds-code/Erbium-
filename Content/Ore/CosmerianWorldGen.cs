@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.IO;
 using Terraria.WorldBuilding;
 
@@ -12,6 +13,19 @@ namespace HexTest.Content.Ore
 {
 	public class CosmerianWorldGen : ModSystem
 	{
+		public static List<Point> HousePositions = new List<Point>();
+		public static ModKeybind TeleportKey;
+
+		public override void Load()
+		{
+			TeleportKey = KeybindLoader.RegisterKeybind(Mod, "TeleportToHouse", "H");
+		}
+
+		public override void Unload()
+		{
+			TeleportKey = null;
+		}
+
 		public override void ModifyWorldGenTasks(List<GenPass> list, ref double totalWeight)
 		{
 			int index = list.FindIndex(genpass => genpass.Name == "Micro Biomes");
@@ -24,6 +38,59 @@ namespace HexTest.Content.Ore
 			{
 				list.Insert(index, new CosmerianOrePass());
 				list.Insert(index + 1, new CosmerianHousePass());
+			}
+		}
+
+		public override void PostUpdateWorld()
+		{
+			if (TeleportKey != null && TeleportKey.JustPressed && HousePositions.Count > 0)
+			{
+				Player player = Main.LocalPlayer;
+				Point nearest = HousePositions[0];
+				float nearestDist = Vector2.Distance(player.Center, nearest.ToVector2() * 16);
+
+				for (int i = 1; i < HousePositions.Count; i++)
+				{
+					float dist = Vector2.Distance(player.Center, HousePositions[i].ToVector2() * 16);
+					if (dist < nearestDist)
+					{
+						nearest = HousePositions[i];
+						nearestDist = dist;
+					}
+				}
+
+				player.Center = new Vector2(nearest.X * 16 + 8, nearest.Y * 16);
+				player.velocity = Vector2.Zero;
+				Terraria.Audio.SoundEngine.PlaySound(SoundID.Item6, player.position);
+				Main.NewText("Teleported to Cosmerian House!", new Color(150, 100, 255));
+			}
+		}
+
+		public override void SaveWorldData(TagCompound tag)
+		{
+			List<int> xList = new List<int>();
+			List<int> yList = new List<int>();
+			foreach (Point p in HousePositions)
+			{
+				xList.Add(p.X);
+				yList.Add(p.Y);
+			}
+			tag["houseX"] = xList;
+			tag["houseY"] = yList;
+		}
+
+		public override void LoadWorldData(TagCompound tag)
+		{
+			HousePositions.Clear();
+			if (tag.ContainsKey("houseX") && tag.ContainsKey("houseY"))
+			{
+				IList<int> xList = tag.GetList<int>("houseX");
+				IList<int> yList = tag.GetList<int>("houseY");
+				int count = Math.Min(xList.Count, yList.Count);
+				for (int i = 0; i < count; i++)
+				{
+					HousePositions.Add(new Point(xList[i], yList[i]));
+				}
 			}
 		}
 	}
@@ -183,23 +250,29 @@ namespace HexTest.Content.Ore
 		private void PlaceInBiome(Mod structureHelper, GenerationProgress progress, int structWidth, int structHeight, int biomeTile)
 		{
 			int placed = 0;
-			int maxAttempts = 500;
+			int maxAttempts = 1000;
 			int maxPlacements = 3;
-			int biomeTileCount = 0;
+
+			int surfaceY = (int)Main.worldSurface;
+
+			List<Point> candidates = new List<Point>();
 
 			for (int x = 20; x < Main.maxTilesX - structWidth - 20; x++)
 			{
-				for (int y = (int)Main.rockLayer; y < Main.maxTilesY - structHeight - 20; y++)
+				for (int y = surfaceY - 30; y < surfaceY + 30; y++)
 				{
+					if (!WorldGen.InWorld(x, y))
+						continue;
+
 					Tile tile = Main.tile[x, y];
 					if (tile.HasTile && tile.TileType == biomeTile)
 					{
-						biomeTileCount++;
+						candidates.Add(new Point(x, y));
 					}
 				}
 			}
 
-			if (biomeTileCount == 0)
+			if (candidates.Count == 0)
 			{
 				return;
 			}
@@ -211,36 +284,24 @@ namespace HexTest.Content.Ore
 			{
 				attempts++;
 
-				int px = WorldGen.genRand.Next(20, Main.maxTilesX - structWidth - 20);
-				int py = WorldGen.genRand.Next((int)Main.rockLayer + 10, Main.maxTilesY - structHeight - 20);
+				Point candidate = candidates[WorldGen.genRand.Next(candidates.Count)];
+				int px = candidate.X;
+				int py = (int)Main.worldSurface - structHeight;
 
-				bool nearBiome = false;
-				for (int bx = px - 5; bx <= px + structWidth + 5; bx++)
+				int groundY = py + structHeight;
+				while (groundY < Main.maxTilesY - 10 && !Main.tile[px, groundY].HasTile)
 				{
-					for (int by = py - 5; by <= py + structHeight + 5; by++)
-					{
-						if (!WorldGen.InWorld(bx, by))
-							continue;
-
-						Tile tile = Main.tile[bx, by];
-						if (tile.HasTile && tile.TileType == biomeTile)
-						{
-							nearBiome = true;
-							break;
-						}
-					}
-					if (nearBiome) break;
+					groundY++;
 				}
+				py = groundY - structHeight;
 
-				if (!nearBiome)
-				{
+				if (!WorldGen.InWorld(px, py) || !WorldGen.InWorld(px + structWidth, py + structHeight))
 					continue;
-				}
 
 				bool tooClose = false;
 				foreach (Point usedPoint in used)
 				{
-					if (Math.Abs(usedPoint.X - px) < structWidth + 30 && Math.Abs(usedPoint.Y - py) < structHeight + 30)
+					if (Math.Abs(usedPoint.X - px) < structWidth + 30)
 					{
 						tooClose = true;
 						break;
@@ -248,9 +309,7 @@ namespace HexTest.Content.Ore
 				}
 
 				if (tooClose)
-				{
 					continue;
-				}
 
 				bool hasSpace = true;
 				for (int sx = px - 2; sx < px + structWidth + 2; sx++)
@@ -267,14 +326,13 @@ namespace HexTest.Content.Ore
 				}
 
 				if (!hasSpace)
-				{
 					continue;
-				}
 
 				try
 				{
 					structureHelper.Call("Place", StructureFile, new Point16(px, py));
 					used.Add(new Point(px, py));
+					CosmerianWorldGen.HousePositions.Add(new Point(px + structWidth / 2, py + structHeight));
 					placed++;
 
 					FillChestsInArea(px, py, structWidth, structHeight);

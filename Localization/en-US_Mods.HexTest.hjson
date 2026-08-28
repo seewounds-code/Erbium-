@@ -76,6 +76,11 @@ Projectiles: {
 }
 
 Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block
-Keybinds.OpenTestMenu.DisplayName: Open Test Menu
+
+Keybinds: {
+	OpenTestMenu.DisplayName: Open Test Menu
+	TeleportToHouse.DisplayName: Teleport To House
+}
+
 NPCs.CosmoUfo.DisplayName: Cosmo Ufo
 BossChecklistIntegration.CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywhere and anytime.
