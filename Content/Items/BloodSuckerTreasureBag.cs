@@ -30,9 +30,18 @@ namespace HexTest.Content.Items
 
 		public override void ModifyItemLoot(ItemLoot itemLoot)
 		{
-			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerTrophy>()));
-			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerMask>(), 2));
-			itemLoot.Add(ItemDropRule.CoinsBasedOnNPCValue(ModContent.NPCType<BloodSuckerHead>()));
+			// 1x Boss Mask — guaranteed, exactly one.
+			itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerMask>(), 1, 1, 1));
+
+			// 5-10x Healing Potion (heals 100 HP) — guaranteed.
+			itemLoot.Add(ItemDropRule.Common(ItemID.HealingPotion, 1, 5, 10));
+
+			// 1-3x Gold Coin — guaranteed.
+			itemLoot.Add(ItemDropRule.Common(ItemID.GoldCoin, 1, 1, 3));
+
+			// IMPORTANT: do NOT add the Trophy here. BloodSuckerTrophy drops directly
+			// from the boss corpse in BloodSuckerHead.ModifyNPCLoot (1-in-10). Putting it
+			// in the bag too would duplicate it in Expert/Master Mode.
 		}
 	}
 }

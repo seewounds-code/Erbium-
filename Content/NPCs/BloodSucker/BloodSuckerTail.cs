@@ -33,11 +33,14 @@ namespace HexTest.Content.NPCs.BloodSucker
 			NPC.chaseable = false;
 			NPC.HitSound = SoundID.NPCHit18;
 			NPC.aiStyle = -1;
+			// Shared-health with the head: the AI() re-asserts realLife = ai[0] every frame.
+			NPC.dontTakeDamage = false;
+			NPC.realLife = -1;
 		}
 
-		public override bool? CanBeHitByItem(Player player, Item item) => false;
+		public override bool? CanBeHitByItem(Player player, Item item) => true;
 
-		public override bool? CanBeHitByProjectile(Projectile projectile) => false;
+		public override bool? CanBeHitByProjectile(Projectile projectile) => true;
 
 		public override bool CanBeHitByNPC(NPC attacker) => false;
 
@@ -45,41 +48,45 @@ namespace HexTest.Content.NPCs.BloodSucker
 
 		public override void AI()
 		{
-			FollowSegment();
-		}
+			// ai[0] = the head's whoAmI (set in SpawnSegments). Re-assert every frame so
+			// a hit on this segment always redirects to — and reduces — the boss's real HP.
+			int headIndex = (int)NPC.ai[0];
+			if (headIndex < 0 || headIndex >= Main.maxNPCs || !Main.npc[headIndex].active)
+			{
+				NPC.active = false; // head is gone -> this segment dies with it
+				return;
+			}
+			NPC.realLife = headIndex;
 
-		private void FollowSegment()
-		{
-			int followIndex = (int)NPC.ai[0];
-			if (followIndex < 0 || followIndex >= Main.maxNPCs || !Main.npc[followIndex].active)
+			// ai[1] = the segment to follow (the one spawned directly in front of us).
+			int leaderIndex = (int)NPC.ai[1];
+			if (leaderIndex < 0 || leaderIndex >= Main.maxNPCs || !Main.npc[leaderIndex].active)
 			{
 				NPC.active = false;
 				return;
 			}
+			NPC leader = Main.npc[leaderIndex];
 
-			NPC front = Main.npc[followIndex];
+			// Direction vector this segment uses to "see" its leader.
+			Vector2 distanceVector = leader.Center - NPC.Center;
 
-			if (NPC.realLife >= 0)
+			// Rotate smoothly (ease, don't snap) to face the leader.
+			// >>> If the segment sprite is drawn facing RIGHT in the PNG, drop the
+			//     "+ MathHelper.PiOver2". Drawn facing UP (vertical, like the head)? Keep it. <<<
+			NPC.rotation = MathHelper.Lerp(NPC.rotation, distanceVector.ToRotation() + MathHelper.PiOver2, 0.15f);
+
+			// >>> spacing = pixel distance between segment centers. Lower = pack the worm
+			//     tighter, higher = spread it out. Roughly your sprite's height. <<<
+			float spacing = 24f;
+
+			// Lock this segment exactly `spacing` pixels BEHIND the leader so the body
+			// bends naturally around turns instead of lagging into a straight stick.
+			if (distanceVector.LengthSquared() > 0.01f) // avoid Normalize of a zero vector
 			{
-				int headIndex = NPC.realLife;
-				if (headIndex < 0 || headIndex >= Main.maxNPCs || !Main.npc[headIndex].active)
-				{
-					NPC.active = false;
-					return;
-				}
+				NPC.Center = leader.Center - Vector2.Normalize(distanceVector) * spacing;
 			}
 
-			Vector2 toFront = front.Center - NPC.Center;
-			float dist = toFront.Length();
-			Vector2 dir = dist > 0.01f ? toFront / dist : Vector2.UnitX;
-
-			float desiredGap = (front.width + NPC.width) / 2f + 8f;
-			Vector2 desiredPos = front.Center - dir * desiredGap;
-
-			NPC.Center = Vector2.Lerp(NPC.Center, desiredPos, 0.55f);
-			NPC.rotation = dir.ToRotation() + MathHelper.PiOver2;
-			NPC.localAI[0]++;
-			NPC.rotation += (float)Math.Sin(NPC.whoAmI * 0.5f + NPC.localAI[0] * 0.12f) * 0.05f;
+			NPC.localAI[0]++; // optional animation timer
 		}
 	}
 }

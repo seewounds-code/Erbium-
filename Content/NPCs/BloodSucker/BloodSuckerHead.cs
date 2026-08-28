@@ -40,6 +40,7 @@ namespace HexTest.Content.NPCs.BloodSucker
 		private float orbitRadius;
 		private Vector2 burstDirection;
 		private bool burstSounded;
+		private Vector2 previousVelocity; // last frame's velocity, used to clamp per-tick turns
 
 		public override void SetStaticDefaults()
 		{
@@ -127,7 +128,47 @@ namespace HexTest.Content.NPCs.BloodSucker
 				StartAttack(NextAttack(attack));
 			}
 
-			SnapRotation(NPC.velocity);
+			// ---- Inertial steering: keep the head's turns wide and smooth ----
+
+			// >>> Adjustable per-tick values (tune to taste). <<<
+			const float maxSpeed     = 22f;  // hard cap on head speed (pixels/tick)
+			const float maxSteerTurn = 0.2f; // max radians the VELOCITY direction may change per tick (suggest 0.15-0.3)
+			const float maxRotTurn   = 0.1f; // max radians the SPRITE rotation may change per tick (suggest 0.08-0.12)
+
+			// 1) Cap speed first.
+			Vector2 vel = NPC.velocity;
+			float speed = vel.Length();
+			if (speed > maxSpeed)
+			{
+				vel = vel.SafeNormalize(Vector2.Zero) * maxSpeed;
+				NPC.velocity = vel;
+				speed = maxSpeed;
+			}
+
+			// 2) Cap how much the velocity DIRECTION can rotate per tick, so the head
+			//    arcs into turns instead of snapping toward the target instantly.
+			if (speed > 0.01f && previousVelocity.LengthSquared() > 0.01f)
+			{
+				float newAngle = vel.ToRotation();
+				float oldAngle = previousVelocity.ToRotation();
+				float diff = MathHelper.WrapAngle(newAngle - oldAngle);
+				float clamped = MathHelper.Clamp(diff, -maxSteerTurn, maxSteerTurn);
+				vel = vel.RotatedBy(clamped - diff); // rotates 'vel' back inside the turn limit
+				NPC.velocity = vel;
+			}
+
+			// 3) Ease the sprite rotation toward the velocity angle, clamped per tick.
+			//    >>> "+ MathHelper.PiOver2" kept — the head sprite is drawn facing UP
+			//        in the PNG (vertical). Omit the offset if yours faces RIGHT. <<<
+			if (vel.LengthSquared() > 0.01f)
+			{
+				float targetRotation = vel.ToRotation() + MathHelper.PiOver2;
+				float rotDiff = MathHelper.WrapAngle(targetRotation - NPC.rotation);
+				NPC.rotation += MathHelper.Clamp(rotDiff, -maxRotTurn, maxRotTurn);
+			}
+
+			// Remember final velocity so next frame can limit the turn from here.
+			previousVelocity = NPC.velocity;
 		}
 
 		private void StartAttack(int attack)
@@ -454,6 +495,7 @@ namespace HexTest.Content.NPCs.BloodSucker
 			{
 				return;
 			}
+			NPC.realLife = NPC.whoAmI; // the head owns the boss's shared health bar
 			int previous = NPC.whoAmI;
 			for (int i = 0; i < BodySegmentCount; i++)
 			{
@@ -462,7 +504,8 @@ namespace HexTest.Content.NPCs.BloodSucker
 				if (index >= 0 && index < Main.maxNPCs && Main.npc[index].active)
 				{
 					Main.npc[index].realLife = NPC.whoAmI;
-					Main.npc[index].ai[0] = previous;
+					Main.npc[index].ai[0] = NPC.whoAmI;   // HP owner = the head (AI re-asserts realLife from this)
+					Main.npc[index].ai[1] = previous;     // segment to follow = the one spawned in front
 					Main.npc[index].netUpdate = true;
 					previous = index;
 				}
@@ -539,8 +582,12 @@ namespace HexTest.Content.NPCs.BloodSucker
 		{
 			npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<BloodSuckerTreasureBag>()));
 			npcLoot.Add(ItemDropRule.Common(ItemID.GoldCoin, 1, 5, 10));
-			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerTrophy>(), 1));
+			// Trophy drops ONLY from the corpse (1 in 10 chance). Never also put it in the bag.
+			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerTrophy>(), 10));
 			npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<BloodSuckerMask>(), 4));
+			// Potions: 5-10 Lesser Healing (heal 50), 2-5 Healing (heal 100); 1 in 1 chance.
+			npcLoot.Add(ItemDropRule.Common(ItemID.LesserHealingPotion, 1, 5, 10));
+			npcLoot.Add(ItemDropRule.Common(ItemID.HealingPotion, 1, 2, 5));
 		}
 	}
 }
