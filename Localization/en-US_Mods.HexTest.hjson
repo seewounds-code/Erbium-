@@ -85,6 +85,11 @@ Items: {
 		DisplayName: Infernite Brick Wall
 		Tooltip: ""
 	}
+
+	InferniskinPotion: {
+		DisplayName: Inferniskin Potion
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -130,3 +135,10 @@ Configs: {
 
 NPCs.CosmoUfo.DisplayName: Cosmo Ufo
 BossChecklistIntegration.CosmoUfo.SpawnInfo: Use a [i:HexTest/CosmoBeacon] anywhere and anytime.
+
+Buffs: {
+	InferniskinBuff: {
+		DisplayName: Inferniskin Buff
+		Description: Mods.HexTest.Buffs.InferniskinBuff.Description
+	}
+}
