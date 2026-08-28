@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameContent.UI.BigProgressBar;
 using Terraria.ModLoader;
 
-namespace HexTest.Content.NPC
+namespace HexTest.Content.CosmoNpcs
 {
 	using NPC = Terraria.NPC;
 

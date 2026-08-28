@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using HexTest.Content.Items;
-using HexTest.Content.NPC;
+using HexTest.Content.CosmoNpcs;
 using HexTest.Content.Ore;
 
 namespace HexTest.Content.Systems
