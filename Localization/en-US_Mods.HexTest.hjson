@@ -117,6 +117,15 @@ Items: {
 		DisplayName: Treasure Bag (Blood Sucker)
 		Tooltip: ""
 	}
+
+	ScaffoldingBoots: {
+		DisplayName: Scaffolding Boots
+		Tooltip:
+			'''
+			Increases movement speed
+			Auto-places platforms beneath your feet from your inventory while moving
+			'''
+	}
 }
 
 Projectiles: {
