@@ -32,6 +32,8 @@ namespace HexTest.Content.Menu
 
 		public override Asset<Texture2D> Logo => logo;
 
+		public override int Music => MusicLoader.GetMusicSlot(Mod, "Content/Music/MenuMusic");
+
 		public override void Load()
 		{
 			logo = ModContent.Request<Texture2D>("HexTest/Content/Menu/ErbiumLogo");
@@ -83,6 +85,17 @@ namespace HexTest.Content.Menu
 			if (config.MenuBackground && background != null)
 			{
 				DrawBackgroundCover(spriteBatch, background.Value);
+			}
+
+			Texture2D logoTexture = logo?.Value;
+			if (logoTexture != null)
+			{
+				float maxWidth = Main.screenWidth * 0.28f;
+				float maxHeight = Main.screenHeight * 0.2f;
+				logoScale = Math.Min(maxWidth / logoTexture.Width, maxHeight / logoTexture.Height);
+				float scaledHeight = logoTexture.Height * logoScale;
+				logoDrawCenter = new Vector2(Main.screenWidth / 2f, Main.screenHeight * 0.06f + scaledHeight * 0.5f);
+				drawColor = Color.White;
 			}
 
 			return config.MenuLogo;
