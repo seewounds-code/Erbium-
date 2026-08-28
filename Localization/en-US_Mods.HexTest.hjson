@@ -60,6 +60,11 @@ Items: {
 		DisplayName: Cosmerian Brick Wall
 		Tooltip: ""
 	}
+
+	FrostSaber: {
+		DisplayName: Frost Saber
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
