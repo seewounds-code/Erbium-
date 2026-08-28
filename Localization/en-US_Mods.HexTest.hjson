@@ -65,6 +65,26 @@ Items: {
 		DisplayName: Frost Saber
 		Tooltip: ""
 	}
+
+	InferniteOre: {
+		DisplayName: Infernite Ore
+		Tooltip: ""
+	}
+
+	InferniteBar: {
+		DisplayName: Infernite Bar
+		Tooltip: ""
+	}
+
+	InferniteBrick: {
+		DisplayName: Infernite Brick
+		Tooltip: ""
+	}
+
+	InferniteBrickWall: {
+		DisplayName: Infernite Brick Wall
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -75,11 +95,37 @@ Projectiles: {
 	CosmoMonster.DisplayName: Cosmo Monster
 }
 
-Tiles.CosmerianOreBlock.DisplayName: Cosmerian Ore Block
+Tiles: {
+	CosmerianOreBlock.DisplayName: Cosmerian Ore Block
+	InferniteOreBlock.DisplayName: Infernite Ore Block
+}
 
 Keybinds: {
 	OpenTestMenu.DisplayName: Open Test Menu
 	TeleportToHouse.DisplayName: Teleport To House
+}
+
+Configs: {
+	MenuConfig: {
+		MenuHeader: Menu
+
+		MenuBackground: {
+			Label: Erbium Menu Background
+			Tooltip: Replaces the main menu background with the Erbium background image.
+		}
+
+		MenuLogo: {
+			Label: Erbium Menu Logo
+			Tooltip: Replaces the tModLoader logo with the Erbium logo.
+		}
+
+		MenuSnow: {
+			Label: Menu Snow
+			Tooltip: Falling snow drifts down across the main menu.
+		}
+
+		DisplayName: Menu Config
+	}
 }
 
 NPCs.CosmoUfo.DisplayName: Cosmo Ufo

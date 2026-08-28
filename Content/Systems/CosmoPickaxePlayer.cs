@@ -40,29 +40,36 @@ namespace HexTest.Content.Systems
 			if (!centerTile.HasTile)
 				return;
 
-			for (int dx = -1; dx <= 1; dx++)
+			int offsetX = Player.direction > 0 ? 1 : -1;
+			int offsetY = Player.controlUp ? -1 : 1;
+
+			int[,] offsets = {
+				{ 0, 0 },
+				{ offsetX, 0 },
+				{ 0, offsetY },
+				{ offsetX, offsetY }
+			};
+
+			for (int i = 0; i < 4; i++)
 			{
-				for (int dy = -1; dy <= 1; dy++)
-				{
-					int tx = targetX + dx;
-					int ty = targetY + dy;
+				int tx = targetX + offsets[i, 0];
+				int ty = targetY + offsets[i, 1];
 
-					if (!WorldGen.InWorld(tx, ty))
-						continue;
+				if (!WorldGen.InWorld(tx, ty))
+					continue;
 
-					Tile tile = Main.tile[tx, ty];
-					if (!tile.HasTile)
-						continue;
+				Tile tile = Main.tile[tx, ty];
+				if (!tile.HasTile)
+					continue;
 
-					if (TileID.Sets.BasicChest[tile.TileType] || TileID.Sets.Torch[tile.TileType])
-						continue;
+				if (TileID.Sets.BasicChest[tile.TileType] || TileID.Sets.Torch[tile.TileType])
+					continue;
 
-					isMiningExtra = true;
-					Player.PickTile(tx, ty, Player.HeldItem.pick);
-					isMiningExtra = false;
+				isMiningExtra = true;
+				Player.PickTile(tx, ty, Player.HeldItem.pick);
+				isMiningExtra = false;
 
-					SpawnMiningParticles(tx, ty);
-				}
+				SpawnMiningParticles(tx, ty);
 			}
 
 			SpawnMiningParticles(targetX, targetY);

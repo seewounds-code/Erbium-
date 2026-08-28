@@ -37,7 +37,28 @@ namespace HexTest.Content.Ore
 			if (index != -1)
 			{
 				list.Insert(index, new CosmerianOrePass());
-				list.Insert(index + 1, new CosmerianHousePass());
+				list.Insert(index + 1, new CaveHousePass());
+			}
+
+			// Infernite replaces Calamity's Brimstone Slag, which is generated in the
+			// "Brimstone Crag" pass that runs near the very end of worldgen. Anchor our
+			// pass right after it so the slag tiles actually exist to be replaced.
+			int cragIndex = list.FindIndex(genpass => genpass.Name == "Brimstone Crag");
+			if (cragIndex != -1)
+			{
+				list.Insert(cragIndex + 1, new InferniteWorldGen());
+			}
+			else
+			{
+				int cleanupIndex = list.FindIndex(genpass => genpass.Name == "Final Cleanup");
+				if (cleanupIndex != -1)
+				{
+					list.Insert(cleanupIndex + 1, new InferniteWorldGen());
+				}
+				else
+				{
+					list.Add(new InferniteWorldGen());
+				}
 			}
 		}
 
@@ -62,7 +83,7 @@ namespace HexTest.Content.Ore
 				player.Center = new Vector2(nearest.X * 16 + 8, nearest.Y * 16);
 				player.velocity = Vector2.Zero;
 				Terraria.Audio.SoundEngine.PlaySound(SoundID.Item6, player.position);
-				Main.NewText("Teleported to Cosmerian House!", new Color(150, 100, 255));
+				Main.NewText("Teleported to Cosmerian Cave House!", new Color(150, 100, 255));
 			}
 		}
 
@@ -210,98 +231,60 @@ namespace HexTest.Content.Ore
 		}
 	}
 
-	public class CosmerianHousePass : GenPass
+	public class CaveHousePass : GenPass
 	{
-		private const string StructureFile = "Content/Structures/house.shstruct";
+		private const string StructureFile = "Content/Structures/cavehouse.shstruct";
+		private const int StructWidth = 16;
+		private const int StructHeight = 9;
 
-		public CosmerianHousePass() : base("CosmerianHouse", 100f)
+		public CaveHousePass() : base("CaveHouse", 100f)
 		{
 		}
 
 		protected override void ApplyPass(GenerationProgress progress, GameConfiguration configuration)
 		{
-			progress.Message = "Growing cosmerian houses";
+			progress.Message = "Growing cosmerian cave houses";
 
 			if (!ModLoader.TryGetMod("StructureHelper", out Mod structureHelper))
 			{
 				return;
 			}
 
-			int structWidth = 20;
-			int structHeight = 15;
-
-			try
-			{
-				object sizeResult = structureHelper.Call("GetSize", StructureFile);
-				if (sizeResult is Vector2 v)
-				{
-					structWidth = (int)v.X;
-					structHeight = (int)v.Y;
-				}
-			}
-			catch
-			{
-			}
-
-			PlaceInBiome(structureHelper, progress, structWidth, structHeight, TileID.MarbleBlock);
-			PlaceInBiome(structureHelper, progress, structWidth, structHeight, TileID.MushroomGrass);
-		}
-
-		private void PlaceInBiome(Mod structureHelper, GenerationProgress progress, int structWidth, int structHeight, int biomeTile)
-		{
 			int placed = 0;
-			int maxAttempts = 1000;
-			int maxPlacements = 3;
+			int maxAttempts = 2000;
+			int maxPlacements = 5;
+			int minCavernY = (int)(Main.worldSurface + 50);
+			int maxCavernY = (int)(Main.rockLayer * 2.5);
 
-			int surfaceY = (int)Main.worldSurface;
+			if (maxCavernY > Main.maxTilesY - 30)
+				maxCavernY = Main.maxTilesY - 30;
 
-			List<Point> candidates = new List<Point>();
-
-			for (int x = 20; x < Main.maxTilesX - structWidth - 20; x++)
-			{
-				for (int y = surfaceY - 30; y < surfaceY + 30; y++)
-				{
-					if (!WorldGen.InWorld(x, y))
-						continue;
-
-					Tile tile = Main.tile[x, y];
-					if (tile.HasTile && tile.TileType == biomeTile)
-					{
-						candidates.Add(new Point(x, y));
-					}
-				}
-			}
-
-			if (candidates.Count == 0)
-			{
-				return;
-			}
-
-			int attempts = 0;
 			HashSet<Point> used = new HashSet<Point>();
+			int attempts = 0;
 
 			while (placed < maxPlacements && attempts < maxAttempts)
 			{
 				attempts++;
 
-				Point candidate = candidates[WorldGen.genRand.Next(candidates.Count)];
-				int px = candidate.X;
-				int py = (int)Main.worldSurface - structHeight;
+				int px = WorldGen.genRand.Next(30, Main.maxTilesX - StructWidth - 30);
+				int py = WorldGen.genRand.Next(minCavernY, maxCavernY);
 
-				int groundY = py + structHeight;
-				while (groundY < Main.maxTilesY - 10 && !Main.tile[px, groundY].HasTile)
-				{
-					groundY++;
-				}
-				py = groundY - structHeight;
+				if (!WorldGen.InWorld(px, py) || !WorldGen.InWorld(px + StructWidth, py + StructHeight))
+					continue;
 
-				if (!WorldGen.InWorld(px, py) || !WorldGen.InWorld(px + structWidth, py + structHeight))
+				if (Math.Abs(px + StructWidth / 2 - Main.spawnTileX) < 80)
+					continue;
+
+				if (!IsNearBiome(px, py))
+					continue;
+
+				if (!HasEnoughOpenSpace(px, py, 5))
 					continue;
 
 				bool tooClose = false;
 				foreach (Point usedPoint in used)
 				{
-					if (Math.Abs(usedPoint.X - px) < structWidth + 30)
+					if (Math.Abs(usedPoint.X - px) < StructWidth + 40 && Math.Abs(usedPoint.Y - py) < StructHeight + 40)
 					{
 						tooClose = true;
 						break;
@@ -311,31 +294,17 @@ namespace HexTest.Content.Ore
 				if (tooClose)
 					continue;
 
-				bool hasSpace = true;
-				for (int sx = px - 2; sx < px + structWidth + 2; sx++)
-				{
-					for (int sy = py - 2; sy < py + structHeight + 2; sy++)
-					{
-						if (!WorldGen.InWorld(sx, sy))
-						{
-							hasSpace = false;
-							break;
-						}
-					}
-					if (!hasSpace) break;
-				}
-
-				if (!hasSpace)
+				if (!IsMostlySolid(px, py))
 					continue;
 
 				try
 				{
 					structureHelper.Call("Place", StructureFile, new Point16(px, py));
 					used.Add(new Point(px, py));
-					CosmerianWorldGen.HousePositions.Add(new Point(px + structWidth / 2, py + structHeight));
+					CosmerianWorldGen.HousePositions.Add(new Point(px + StructWidth / 2, py + StructHeight));
 					placed++;
 
-					FillChestsInArea(px, py, structWidth, structHeight);
+					FillChestsInArea(px, py, StructWidth, StructHeight);
 
 					progress.Value = (double)placed / maxPlacements;
 				}
@@ -343,6 +312,81 @@ namespace HexTest.Content.Ore
 				{
 				}
 			}
+		}
+
+		private bool IsNearBiome(int x, int y)
+		{
+			int scanRadius = 20;
+
+			for (int dx = -scanRadius; dx <= scanRadius + StructWidth; dx++)
+			{
+				for (int dy = -scanRadius; dy <= scanRadius + StructHeight; dy++)
+				{
+					int tx = x + dx;
+					int ty = y + dy;
+
+					if (!WorldGen.InWorld(tx, ty))
+						continue;
+
+					Tile tile = Main.tile[tx, ty];
+					if (tile.HasTile && (tile.TileType == TileID.Granite || tile.TileType == TileID.Marble))
+						return true;
+
+					if (tile.WallType == WallID.GraniteUnsafe || tile.WallType == WallID.MarbleUnsafe || tile.WallType == WallID.Granite || tile.WallType == WallID.Marble)
+						return true;
+				}
+			}
+
+			return false;
+		}
+
+		private bool HasEnoughOpenSpace(int x, int y, int openThreshold)
+		{
+			int openCount = 0;
+			int checkSize = 6;
+
+			for (int dx = 0; dx < StructWidth; dx += checkSize)
+			{
+				for (int dy = 0; dy < StructHeight; dy += checkSize)
+				{
+					int tx = x + dx;
+					int ty = y + dy;
+
+					if (!WorldGen.InWorld(tx, ty))
+						return false;
+
+					Tile tile = Main.tile[tx, ty];
+					if (!tile.HasTile || !Main.tileSolid[tile.TileType])
+						openCount++;
+				}
+			}
+
+			return openCount >= openThreshold;
+		}
+
+		private bool IsMostlySolid(int x, int y)
+		{
+			int solidCount = 0;
+			int total = 0;
+
+			for (int dx = 0; dx < StructWidth; dx += 3)
+			{
+				for (int dy = 0; dy < StructHeight; dy += 3)
+				{
+					int tx = x + dx;
+					int ty = y + dy + StructHeight;
+
+					if (!WorldGen.InWorld(tx, ty))
+						continue;
+
+					Tile tile = Main.tile[tx, ty];
+					total++;
+					if (tile.HasTile && (Main.tileSolid[tile.TileType] || tile.TileType == TileID.Granite || tile.TileType == TileID.Marble || tile.TileType == TileID.Dirt || tile.TileType == TileID.Stone))
+						solidCount++;
+				}
+			}
+
+			return total > 0 && solidCount >= total / 2;
 		}
 
 		private void FillChestsInArea(int x, int y, int width, int height)

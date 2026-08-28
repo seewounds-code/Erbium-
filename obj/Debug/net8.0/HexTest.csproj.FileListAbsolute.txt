@@ -10,3 +10,4 @@ C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Deb
 C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\refint\HexTest.dll
 C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.pdb
 C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\ref\HexTest.dll
+C:\Users\akyuz\Documents\My Games\Terraria\tModLoader\ModSources\HexTest\obj\Debug\net8.0\HexTest.sourcelink.json
